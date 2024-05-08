@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,16 @@ Route::namespace('admin')->group(function () {
             Route::get('/{model_type}/edit/{id}', [CategoryController::class,'edit'])->name('admin.category.edit');
             Route::post('/{model_type}/edit/{id}', [CategoryController::class,'update'])->name('admin.category.update');
             Route::get('/{model_type}/delete/{id}', [CategoryController::class,'destroy'])->name('admin.category.delete');
+        });
+
+        // Quản lý nhãn hiệu
+        Route::group(['prefix'=>'brand'],function() {
+            Route::get('/', [BrandController::class,'index'])->name('admin.brand.index');
+            Route::get('/add', [BrandController::class,'add'])->name('admin.brand.add');
+            Route::post('/add', [BrandController::class,'store'])->name('admin.brand.store');
+            Route::get('/edit/{id}', [BrandController::class,'edit'])->name('admin.brand.edit');
+            Route::post('/edit/{id}', [BrandController::class,'update'])->name('admin.brand.update');
+            Route::get('/delete/{id}', [BrandController::class,'destroy'])->name('admin.brand.delete');
         });
     });
 });
