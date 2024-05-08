@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,12 +11,24 @@ Route::namespace('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login.form');
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
 
-     Route::get('/register',[RegisterController::class,'showRegisterForm'])->name('admin.register.form');
+    // Tạo tài khoản admin
+    Route::get('/register',[RegisterController::class,'showRegisterForm'])->name('admin.register.form');
     Route::post('/register',[RegisterController::class,'register'])->name('admin.register');
 
+    // Kiểm tra middleware - đã đăng nhập với tài khoản admin chưa
     Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.auth.logout');
         Route::get('/', [HomeController::class, 'index'])->name('admin.homepage');
+
+        // Quản lý Category
+        Route::group(['prefix'=>'category'],function() {
+            Route::get('/{model_type}/', [CategoryController::class,'index'])->name('admin.category.index');
+            Route::get('/{model_type}/add', [CategoryController::class,'add'])->name('admin.category.add');
+            Route::post('/{model_type}/add', [CategoryController::class,'store'])->name('admin.category.store');
+            Route::get('/{model_type}/edit/{id}', [CategoryController::class,'edit'])->name('admin.category.edit');
+            Route::post('/{model_type}/edit/{id}', [CategoryController::class,'update'])->name('admin.category.update');
+            Route::get('/{model_type}/delete/{id}', [CategoryController::class,'destroy'])->name('admin.category.delete');
+        });
     });
 });
