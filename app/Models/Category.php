@@ -22,6 +22,8 @@ class Category extends Model
         return $this->hasMany(Category::class, "parent_id",'id');
     }
 
+
+
     // Xoá các category con của một category
     public function deleteChildren(): void{
         foreach ($this->subCategories as $child){
