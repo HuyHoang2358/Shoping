@@ -26,6 +26,11 @@ class Post extends Model
     {
         return Image::where('model_type', 'post')->where('model_id', $this->id)->get();
     }
+
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
     public function deleteImages()
     {
         $images = Image::where('model_type', 'post')->where('model_id', $this->id)->get();
@@ -40,6 +45,7 @@ class Post extends Model
         parent::boot();
         static::deleting(function($post){
             $post->deleteImages();
+            $post->comments()->delete();
         });
     }
 }
